@@ -1,5 +1,7 @@
 # Provided, don't edit
-require 'directors_database'
+# require 'directors_database'
+# Student edited to fix run issue - to avoid having to cd into directory in terminal 
+require './lib/directors_database'
 
 # A method we're giving you. This "flattens"  Arrays of Arrays so: [[1,2],
 # [3,4,5], [6]] => [1,2,3,4,5,6].
@@ -30,7 +32,6 @@ def movie_with_director_name(director_name, movie_data)
   }
 end
 
-
 # Your code after this point
 
 def movies_with_director_key(name, movies_collection)
@@ -48,6 +49,10 @@ def movies_with_director_key(name, movies_collection)
   # Array of Hashes where each Hash represents a movie; however, they should all have a
   # :director_name key. This addition can be done by using the provided
   # movie_with_director_name method
+  
+  movies_coll = Array.new
+  movies_collection.collect { | title | movies_coll << movie_with_director_name(name, title)  }
+  movies_coll
 end
 
 
@@ -63,6 +68,15 @@ def gross_per_studio(collection)
   #
   # Hash whose keys are the studio names and whose values are the sum
   # total of all the worldwide_gross numbers for every movie in the input Hash
+  totals = Hash.new
+  collection.each do |movie|
+    if totals[movie[:studio]]
+      totals[movie[:studio]] += movie[:worldwide_gross]
+    else
+      totals[movie[:studio]] = movie[:worldwide_gross]
+    end #if
+  end #each
+  totals
 end
 
 def movies_with_directors_set(source)
@@ -76,7 +90,17 @@ def movies_with_directors_set(source)
   #
   # Array of Arrays containing all of a director's movies. Each movie will need
   # to have a :director_name key added to it.
+  
+  dirset_arr = Array.new
+    source.each do |movies_info|
+      movies_info_with_director = movies_with_director_key(movies_info[:name], movies_info[:movies])
+      dirset_arr << movies_info_with_director
+    end
+    dirset_arr
 end
+
+pp directors_database
+
 
 # ----------------    End of Your Code Region --------------------
 # Don't edit the following code! Make the methods above work with this method
